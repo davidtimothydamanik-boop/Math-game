@@ -1,4 +1,4 @@
-name: Android CI (ZIP version)
+name: Android CI (Release APK)
 
 on:
   push:
@@ -10,14 +10,14 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Unzip project
         run: |
           sudo apt-get update
           sudo apt-get install -y unzip
           unzip mathgame_project.zip -d mathgame_project
-          mv mathgame_project/*/* .  || true
+          mv mathgame_project/*/* . || true
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -28,11 +28,11 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew assembleDebug
+      - name: Build Release APK
+        run: ./gradlew assembleRelease
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v4
         with:
-          name: mathgame-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: mathgame-release-apk
+          path: app/build/outputs/apk/release/*.apk
